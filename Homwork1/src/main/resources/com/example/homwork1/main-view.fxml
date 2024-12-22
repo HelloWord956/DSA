@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox alignment="CENTER" prefHeight="425.0" prefWidth="1033.0" spacing="20.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/23.0.1" fx:controller="com.example.homwork1.MainController">
+  <padding>
+    <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+  </padding>
+
+  <!-- Form inputs -->
+  <HBox spacing="10">
+    <Label alignment="CENTER" prefHeight="23.0" prefWidth="63.0" text="First Name: " />
+    <TextField fx:id="firstNameField" />
+    <Label alignment="CENTER" prefHeight="23.0" prefWidth="62.0" text="Last Name: " />
+    <TextField fx:id="lastNameField" />
+    <Label alignment="CENTER" prefHeight="23.0" prefWidth="39.0" text="Point: " />
+    <TextField fx:id="pointField" />
+    <Label alignment="CENTER" prefHeight="22.0" prefWidth="152.0" text="Date of Birth (yyyy-mm-dd): " />
+    <TextField fx:id="dateOfBirthField" />
+  </HBox>
+
+  <!-- Buttons -->
+  <HBox spacing="10">
+    <Button onAction="#saveStudent" text="Save" />
+    <Button onAction="#bubbleSort" text="Bubble Sort" />
+    <Button layoutX="61.0" layoutY="10.0" onAction="#insertionSort" text="Insertion Sort" />
+    <Button layoutX="161.0" layoutY="10.0" onAction="#selectionSort" text="Selection Sort" />
+  </HBox>
+
+  <!-- Table -->
+  <TableView fx:id="tableView" prefHeight="200" prefWidth="500">
+    <columns>
+      <TableColumn fx:id="firstNameCol" text="First Name" />
+      <TableColumn fx:id="lastNameCol" text="Last Name" />
+      <TableColumn fx:id="pointCol" text="Point" />
+      <TableColumn fx:id="dobCol" text="Date of Birth" />
+    </columns>
+  </TableView>
+</VBox>
