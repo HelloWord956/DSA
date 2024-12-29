@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.assigment.controller.HelloController">
+   <top>
+      <AnchorPane prefHeight="300.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <children>
+            <Label alignment="CENTER" layoutX="413.0" layoutY="29.0" prefHeight="30.0" prefWidth="174.0" style="-fx-font-weight: bold;" text="Personal Budget">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <Button fx:id="collectedButton" layoutX="282.0" layoutY="72.0" mnemonicParsing="false" onAction="#onCollectedButtonClick" prefHeight="25.0" prefWidth="131.0" text="Money collected" />
+            <Button fx:id="spentButton" layoutX="587.0" layoutY="72.0" mnemonicParsing="false" onAction="#onSpentButtonClick" prefHeight="25.0" prefWidth="131.0" text="Money spent" />
+            <TextField fx:id="amountMoneyInput" layoutX="343.0" layoutY="119.0" prefHeight="25.0" prefWidth="300.0" promptText="Enter amount of money collected" />
+            <Label alignment="CENTER_RIGHT" layoutX="260.0" layoutY="119.0" prefHeight="25.0" prefWidth="70.0" text="Amount" />
+            <TextField fx:id="reasonInput" layoutX="343.0" layoutY="163.0" prefHeight="25.0" prefWidth="300.0" promptText="Enter reason of money collected" />
+            <Label alignment="CENTER_RIGHT" layoutX="260.0" layoutY="163.0" prefHeight="25.0" prefWidth="70.0" text="Reason" />
+            <DatePicker fx:id="dateTimeInput" layoutX="343.0" layoutY="211.0" prefHeight="25.0" prefWidth="300.0" promptText="Date time" />
+            <Label alignment="CENTER_RIGHT" layoutX="260.0" layoutY="211.0" prefHeight="25.0" prefWidth="70.0" text="Date" />
+            <Button fx:id="saveButton" layoutX="436.0" layoutY="252.0" mnemonicParsing="false" onAction="#onSaveButtonClick" prefHeight="25.0" prefWidth="114.0" text="Save" />
+         </children>
+      </AnchorPane>
+   </top>
+   <left>
+      <AnchorPane prefHeight="500.0" prefWidth="369.0" BorderPane.alignment="CENTER">
+         <children>
+            <TableView accessibleText="Date" layoutY="50.0" prefHeight="450.0" prefWidth="438.0">
+              <columns>
+                <TableColumn fx:id="amountTableColumn" minWidth="146.0" prefWidth="75.0" text="Amount" />
+                <TableColumn fx:id="reasonTableColumn" minWidth="146.0" prefWidth="75.0" text="Reason" />
+                  <TableColumn fx:id="dateTimeTableColumn" minWidth="146.0" prefWidth="75.0" text="Date" />
+              </columns>
+            </TableView>
+            <TextField fx:id="searchReasonInput" layoutX="14.0" layoutY="14.0" onAction="#onSearchReason" prefHeight="25.0" prefWidth="184.0" promptText="Enter Reason to Search" />
+            <ComboBox fx:id="comboBox" layoutX="205.0" layoutY="14.0" prefWidth="150.0" promptText="Sort by Date" />
+         </children>
+      </AnchorPane>
+   </left>
+   <center>
+      <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <children>
+            <BarChart fx:id="barChart" layoutY="2.0" prefHeight="500.0" prefWidth="550.0">
+              <xAxis>
+                <CategoryAxis side="BOTTOM" />
+              </xAxis>
+              <yAxis>
+                <NumberAxis side="LEFT" />
+              </yAxis>
+            </BarChart>
+         </children>
+      </AnchorPane>
+   </center>
+</BorderPane>
