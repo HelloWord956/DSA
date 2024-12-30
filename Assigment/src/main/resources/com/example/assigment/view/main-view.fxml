@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.assigment.controller.HelloController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.assigment.controller.MainController">
    <top>
       <AnchorPane prefHeight="300.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
@@ -38,14 +38,15 @@
    <left>
       <AnchorPane prefHeight="500.0" prefWidth="369.0" BorderPane.alignment="CENTER">
          <children>
-            <TableView accessibleText="Date" layoutY="50.0" prefHeight="450.0" prefWidth="438.0">
+            <TableView fx:id="tableView" accessibleText="Date" layoutY="50.0" prefHeight="450.0" prefWidth="438.0">
               <columns>
-                <TableColumn fx:id="amountTableColumn" minWidth="146.0" prefWidth="75.0" text="Amount" />
-                <TableColumn fx:id="reasonTableColumn" minWidth="146.0" prefWidth="75.0" text="Reason" />
-                  <TableColumn fx:id="dateTimeTableColumn" minWidth="146.0" prefWidth="75.0" text="Date" />
+                <TableColumn fx:id="amountTableColumn" minWidth="109.0" prefWidth="75.0" text="Amount" />
+                <TableColumn fx:id="reasonTableColumn" minWidth="109.0" prefWidth="75.0" text="Reason" />
+                  <TableColumn fx:id="dateTimeTableColumn" minWidth="109.0" prefWidth="75.0" text="Date" />
+                  <TableColumn fx:id="typeTableColumn" minWidth="109.0" prefWidth="75.0" text="Type" />
               </columns>
             </TableView>
-            <TextField fx:id="searchReasonInput" layoutX="14.0" layoutY="14.0" onAction="#onSearchReason" prefHeight="25.0" prefWidth="184.0" promptText="Enter Reason to Search" />
+            <TextField fx:id="searchReasonInput" layoutX="14.0" layoutY="14.0" prefHeight="25.0" prefWidth="184.0" promptText="Enter Reason to Search" />
             <ComboBox fx:id="comboBox" layoutX="205.0" layoutY="14.0" prefWidth="150.0" promptText="Sort by Date" />
          </children>
       </AnchorPane>
@@ -55,10 +56,10 @@
          <children>
             <BarChart fx:id="barChart" layoutY="2.0" prefHeight="500.0" prefWidth="550.0">
               <xAxis>
-                <CategoryAxis side="BOTTOM" />
+                <CategoryAxis side="BOTTOM" fx:id="xAxis" />
               </xAxis>
               <yAxis>
-                <NumberAxis side="LEFT" />
+                <NumberAxis fx:id="yAxis" side="LEFT" />
               </yAxis>
             </BarChart>
          </children>

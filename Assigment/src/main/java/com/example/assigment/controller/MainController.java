@@ -15,7 +15,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 
-public class HelloController {
+public class MainController {
 
     @FXML
     private Button collectedButton;
@@ -36,6 +36,8 @@ public class HelloController {
     private TableColumn<ExpenseRecord, String> reasonTableColumn;
     @FXML
     private TableColumn<ExpenseRecord, LocalDate> dateTimeTableColumn;
+    @FXML
+    private TableColumn<ExpenseRecord, String> typeTableColumn;
 
     @FXML
     private TextField searchReasonInput;
@@ -50,7 +52,8 @@ public class HelloController {
     @FXML
     private NumberAxis yAxis;
 
-    private ObservableList<ExpenseRecord> expensesList = FXCollections.observableArrayList();
+    private final ObservableList<ExpenseRecord> expensesList = FXCollections.observableArrayList();
+    private String currentType = "Collected";
 
     @FXML
     public void initialize() {
@@ -64,8 +67,11 @@ public class HelloController {
         amountTableColumn.setCellValueFactory(cellData -> cellData.getValue().amountProperty().asObject());
         reasonTableColumn.setCellValueFactory(cellData -> cellData.getValue().reasonProperty());
         dateTimeTableColumn.setCellValueFactory(cellData -> cellData.getValue().dateProperty());
+        typeTableColumn.setCellValueFactory(cellData -> cellData.getValue().typeProperty());
 
         tableView.setItems(expensesList);
+
+        searchReasonInput.textProperty().addListener((observable, oldValue, newValue) -> onSearchReason(newValue));
 
         barChart.setTitle("Monthly Expense Overview");
         xAxis.setLabel("Month");
@@ -74,12 +80,14 @@ public class HelloController {
 
     public void onCollectedButtonClick() {
         clearInputs();
+        currentType = "Collected";
         amountMoneyInput.setPromptText("Enter amount of money collected");
         reasonInput.setPromptText("Enter reason for money collected");
     }
 
     public void onSpentButtonClick() {
         clearInputs();
+        currentType = "Spent";
         amountMoneyInput.setPromptText("Enter amount of money spent");
         reasonInput.setPromptText("Enter reason for money spent");
     }
@@ -95,10 +103,17 @@ public class HelloController {
         }
 
         double amount = Double.parseDouble(amountText);
-        ExpenseRecord newRecord = new ExpenseRecord(amount, reasonText, date);
+
+        ExpenseRecord newRecord = new ExpenseRecord(amount, reasonText, date, currentType);
+
         expensesList.add(newRecord);
 
         updateBarChart();
+
+        tableView.setItems(expensesList);
+
+        tableView.refresh();
+
         clearInputs();
     }
 
@@ -108,11 +123,12 @@ public class HelloController {
         Map<String, Double> collectedMoneyByMonth = new HashMap<>();
         Map<String, Double> spentMoneyByMonth = new HashMap<>();
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM"); // Tháng định dạng "YYYY-MM"
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM");
 
         for (ExpenseRecord record : expensesList) {
             String month = record.getDate().format(formatter);
-            if (record.getAmount() > 0) {
+
+            if (record.getType().equals("Collected")) {
                 collectedMoneyByMonth.put(month, collectedMoneyByMonth.getOrDefault(month, 0.0) + record.getAmount());
             } else {
                 spentMoneyByMonth.put(month, spentMoneyByMonth.getOrDefault(month, 0.0) + record.getAmount());
@@ -121,15 +137,16 @@ public class HelloController {
 
         XYChart.Series<String, Number> collectedSeries = new XYChart.Series<>();
         collectedSeries.setName("Money Collected");
+
         XYChart.Series<String, Number> spentSeries = new XYChart.Series<>();
         spentSeries.setName("Money Spent");
 
-        for (String month : collectedMoneyByMonth.keySet()) {
-            collectedSeries.getData().add(new XYChart.Data<>(month, collectedMoneyByMonth.get(month)));
+        for (Map.Entry<String, Double> entry : collectedMoneyByMonth.entrySet()) {
+            collectedSeries.getData().add(new XYChart.Data<>(entry.getKey(), entry.getValue()));
         }
 
-        for (String month : spentMoneyByMonth.keySet()) {
-            spentSeries.getData().add(new XYChart.Data<>(month, spentMoneyByMonth.get(month)));
+        for (Map.Entry<String, Double> entry : spentMoneyByMonth.entrySet()) {
+            spentSeries.getData().add(new XYChart.Data<>(entry.getKey(), entry.getValue()));
         }
 
         barChart.getData().add(collectedSeries);
@@ -142,6 +159,15 @@ public class HelloController {
         for (XYChart.Data<String, Number> data : spentSeries.getData()) {
             data.getNode().setStyle("-fx-bar-fill: deepskyblue;");
         }
+
+        ObservableList<String> months = FXCollections.observableArrayList(
+                "2024-01", "2024-02", "2024-03", "2024-04", "2024-05", "2024-06", "2024-07", "2024-08", "2024-09", "2024-10", "2024-11", "2024-12"
+        );
+        xAxis.setCategories(months);
+
+        xAxis.setTickLabelRotation(45);
+        xAxis.setTickLength(10);
+        xAxis.setTickMarkVisible(true);
     }
 
     private void clearInputs() {
@@ -159,15 +185,21 @@ public class HelloController {
     }
 
     @FXML
-    public void onSearchReason() {
-        String searchQuery = searchReasonInput.getText().toLowerCase();
+    public void onSearchReason(String searchQuery) {
+        searchQuery = searchQuery.toLowerCase();
 
         ObservableList<ExpenseRecord> filteredList = FXCollections.observableArrayList();
-        for (ExpenseRecord record : expensesList) {
-            if (record.getReason().toLowerCase().contains(searchQuery)) {
-                filteredList.add(record);
+
+        if (searchQuery.isEmpty()) {
+            filteredList.addAll(expensesList);
+        } else {
+            for (ExpenseRecord record : expensesList) {
+                if (record.getReason().toLowerCase().contains(searchQuery)) {
+                    filteredList.add(record);
+                }
             }
         }
+
         tableView.setItems(filteredList);
     }
 
@@ -196,17 +228,14 @@ public class HelloController {
     }
 
     private void insertionSortByAmount() {
-        int n = expensesList.size();
-        for (int i = 1; i < n; i++) {
-            ExpenseRecord current = expensesList.get(i);
+        for (int i = 1; i < expensesList.size(); i++) {
+            ExpenseRecord key = expensesList.get(i);
             int j = i - 1;
-
-            while (j >= 0 && expensesList.get(j).getAmount() > current.getAmount()) {
+            while (j >= 0 && expensesList.get(j).getAmount() > key.getAmount()) {
                 expensesList.set(j + 1, expensesList.get(j));
-                j = j - 1;
+                j--;
             }
-
-            expensesList.set(j + 1, current);
+            expensesList.set(j + 1, key);
         }
     }
 }
